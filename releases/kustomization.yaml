@@ -4,6 +4,3 @@ kind: Kustomization
 resources:
   - agentgateway.yaml
   - kagent.yaml
-  - agent.yaml
-  - mcp.yaml
-  - openai-conf.yaml
