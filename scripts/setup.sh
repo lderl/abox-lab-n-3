@@ -69,4 +69,19 @@ if [[ -n "${CPK_OS:-}" && -n "${CPK_ARCH:-}" ]]; then
 fi
 
 
+# Create OpenAI secrets from OPENAI_API_KEY env var
+if [[ -n "${OPENAI_API_KEY:-}" ]]; then
+  log "Creating openai-token secrets..."
+  for ns in agentgateway-system kagent; do
+    kubectl create secret generic openai-token \
+      --from-literal=Authorization="${OPENAI_API_KEY}" \
+      --namespace "${ns}" \
+      --dry-run=client -o yaml | kubectl apply -f -
+  done
+  log "Secrets created in agentgateway-system and kagent"
+else
+  log "WARNING: OPENAI_API_KEY is not set — skipping secret creation."
+  log "         Run 'make secret' manually after setting the variable."
+fi
+
 log "=== setup complete ==="
